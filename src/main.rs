@@ -16,7 +16,7 @@ fn tokenize(input: &str) -> Option<(Vec<&str>, &str)> {
 struct Execute;
 
 impl Execute {
-    fn run(cmd: &str, args: Vec<&str>) {
+    fn run(cmd: &str, args: &[&str]) {
         match cmd {
             "cd" => Self::cd(args),
             "dc" => Self::dc(),
@@ -27,7 +27,7 @@ impl Execute {
         }
     }
 
-    fn cd(args: Vec<&str>) {
+    fn cd(args: &[&str]) {
         let target = if args.is_empty() { 
             match env::var("HOME") {
                 Ok(a) => &a.to_string(),
@@ -70,8 +70,8 @@ impl Execute {
         }
     }
 
-    fn external(cmd: &str, args: Vec<&str>) {
-        match Command::new(cmd).args(&args).status() {
+    fn external(cmd: &str, args: &[&str]) {
+        match Command::new(cmd).args(args).status() {
             Ok(status) => {
                 if !status.success() {
                     eprintln!("afsh: {}", status);
@@ -97,7 +97,7 @@ fn main() {
                     Option::Some((a, c)) => (a, c),
                     Option::None => continue,
                 };
-                Execute::run(cmd,args);
+                Execute::run(cmd,&args);
                 if let Err(e) = rl.history_mut().sync() {
                     eprintln!("afsh: {}", e);
                 };
