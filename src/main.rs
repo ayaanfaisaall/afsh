@@ -28,20 +28,24 @@ impl Execute {
     }
 
     fn cd(args: &[&str]) {
-        let target = if args.is_empty() { 
-            match env::var("HOME") {
-                Ok(a) => &a.to_string(),
-                Err(_) => "/", 
-            }
-        } else { args[0] };
-        if let Err(e) = env::set_current_dir(target) {
-            eprintln!("afsh: {}", e);
-        }
+       let mut target = if args.is_empty() {
+           env::var("HOME").unwrap_or(String::from("/"))
+       } else {
+           args[0].to_string()
+       };
+       if target.starts_with("~") {
+           if let Ok(home) = env::var("HOME") {
+               target = target.replacen('~',&home,1)
+           };
+       };
+       if let Err(e) = env::set_current_dir(&target) {
+           eprintln!("afsh: {}", e)
+       }
     }
 
     fn dc() {
         let target = "..";
-        if let Err(e) = env::set_current_dir(target) {
+        if let Err(e) = env::set_current_dir(&target) {
             eprintln!("afsh: {}", e);
         }
     }
