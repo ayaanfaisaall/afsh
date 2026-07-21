@@ -94,7 +94,7 @@ impl AfshCompleter {
 
 impl Completer for AfshCompleter {
     fn complete(&mut self, line: &str, pos: usize) -> Vec<Suggestion> {
-        eprintln!("\r\n[DEBUG] Tab pressed! Line: '{}', Pos: {}", line, pos);
+
         let line_upto_pfx = &line[..pos];
         let word_start = line_upto_pfx.rfind(' ').map(|i| i + 1).unwrap_or(0);
         let word_to_complete = &line_upto_pfx[word_start..];
@@ -125,6 +125,34 @@ impl Completer for AfshCompleter {
 
         let mut path_suggestions = self.complete_path(word_to_complete, word_start, pos);
         suggestions.append(&mut path_suggestions);
+
+        if suggestions.len() > 1 {
+            let mut prefix = suggestions[0].value.clone();
+            
+            for sug in &suggestions[1..] {
+                let cmn_bytes = prefix
+                    .bytes()
+                    .zip(sug.value.bytes())
+                    .take_while(|(a,b)| a==b)
+                    .count();
+                prefix.truncate(cmn_bytes);
+            }
+
+            if prefix.len() > word_to_complete.len() {
+                let span = suggestions[0].span;
+                suggestions = vec![Suggestion{
+                    value: prefix,
+                    description: None,
+                    extra: None,
+                    span,
+                    append_whitespace: false,
+                    match_indices: vec![].into(),
+                    display_override: None,
+                    style: None,
+                }];
+            } 
+        }
+
         suggestions
     }
 }

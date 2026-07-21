@@ -1,4 +1,7 @@
-use reedline::{Reedline, Vi, Prompt, PromptEditMode, DefaultCompleter, FileBackedHistory, MenuBuilder, ColumnarMenu, ReedlineMenu};
+use reedline::{
+    Reedline, Vi, Prompt, PromptEditMode, FileBackedHistory, 
+    MenuBuilder, ColumnarMenu, ReedlineMenu, KeyCode, KeyModifiers, ReedlineEvent, 
+    default_vi_insert_keybindings, default_vi_normal_keybindings};
 use std::borrow::Cow;
 use std::path::PathBuf;
 use std::env;
@@ -42,12 +45,21 @@ pub fn build_rl() -> Reedline {
     let completion_menu = Box::new(ColumnarMenu::default().with_name("completion_menu"));
     let histf = dirs::home_dir().unwrap_or(PathBuf::from("~")).join(".afsh_history");
     let history = Box::new(FileBackedHistory::with_file(10000,histf).expect("afsh: history war gai!"));
-    let edtmd = Box::new(Vi::default());
+    let mut bindings = default_vi_insert_keybindings();
+    
+    bindings.add_binding(
+        KeyModifiers::NONE,
+        KeyCode::Tab,
+        ReedlineEvent::Menu("completion_menu".to_string()),
+    );
+
+    let edtmd = Box::new(Vi::new(bindings, default_vi_normal_keybindings()));
 
     Reedline::create()
         .with_history(history)
         .with_edit_mode(edtmd)
         .with_completer(completer)
         .with_menu(ReedlineMenu::EngineCompleter(completion_menu))
+        .with_quick_completions(true)
 }
 
