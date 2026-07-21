@@ -1,7 +1,8 @@
-use reedline::{Reedline, Vi, Prompt, PromptEditMode, DefaultCompleter, FileBackedHistory};
+use reedline::{Reedline, Vi, Prompt, PromptEditMode, DefaultCompleter, FileBackedHistory, MenuBuilder, ColumnarMenu, ReedlineMenu};
 use std::borrow::Cow;
 use std::path::PathBuf;
 use std::env;
+mod completer;
 
 pub struct AfshPrompt;
 
@@ -37,7 +38,8 @@ impl Prompt for AfshPrompt {
 }
 
 pub fn build_rl() -> Reedline {
-    let completer = DefaultCompleter::with_inclusions(&['-','_']);
+    let completer = Box::new(completer::AfshCompleter::new());
+    let completion_menu = Box::new(ColumnarMenu::default().with_name("completion_menu"));
     let histf = dirs::home_dir().unwrap_or(PathBuf::from("~")).join(".afsh_history");
     let history = Box::new(FileBackedHistory::with_file(10000,histf).expect("afsh: history war gai!"));
     let edtmd = Box::new(Vi::default());
@@ -45,6 +47,7 @@ pub fn build_rl() -> Reedline {
     Reedline::create()
         .with_history(history)
         .with_edit_mode(edtmd)
-        .with_completer(Box::new(completer))
+        .with_completer(completer)
+        .with_menu(ReedlineMenu::EngineCompleter(completion_menu))
 }
 
