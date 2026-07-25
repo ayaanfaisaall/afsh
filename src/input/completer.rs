@@ -1,6 +1,5 @@
 use reedline::{Completer, Span, Suggestion};
-use std::env;
-use std::fs;
+use std::{ env, fs,};
 
 pub struct AfshCompleter {
     binaries: Option<Vec<String>>,
@@ -16,7 +15,7 @@ impl AfshCompleter {
             return;
         }
         let mut binaries = Vec::new();
-        if let Ok(paths) = env::var("PATH") {
+        if let Some(paths) = env::var_os("PATH") {
             for path in env::split_paths(&paths) {
                 if let Ok(entries) = fs::read_dir(&path) {
                     for entry in entries.flatten() {
@@ -31,7 +30,7 @@ impl AfshCompleter {
                 }
             }
         }
-        binaries.sort();
+        binaries.sort_unstable();
         binaries.dedup();
         self.binaries = Some(binaries);
     }
@@ -102,23 +101,24 @@ impl Completer for AfshCompleter {
 
         if word_start == 0 && !word_to_complete.contains('/') {
             self.load_binaries();
-            let bins = self.binaries.as_ref().unwrap();
-            let start_idx = bins.partition_point(|x| x.as_str() < word_to_complete);
 
-            for bin in &bins[start_idx..] {
-                if bin.starts_with(word_to_complete) {
-                    suggestions.push(Suggestion {
-                        value: bin.clone(),
-                        description: Some("command".to_string()),
-                        extra: None,
-                        span: Span::new(word_start, pos),
-                        append_whitespace: true, 
-                        match_indices: vec![].into(),
-                        display_override: None,
-                        style: None,
-                    });
-                } else {
-                    break;
+            if let Some(bins) = &self.binaries {
+                let start_idx = bins.partition_point(|x| x.as_str() < word_to_complete);
+                for bin in &bins[start_idx..] {
+                    if bin.starts_with(word_to_complete) {
+                        suggestions.push(Suggestion {
+                            value: bin.clone(),
+                            description: Some("command".to_string()),
+                            extra: None,
+                            span: Span::new(word_start, pos),
+                            append_whitespace: true,
+                            match_indices: vec![].into(),
+                            display_override: None,
+                            style: None,
+                        });
+                    } else {
+                        break;
+                    }
                 }
             }
         }

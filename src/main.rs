@@ -1,21 +1,20 @@
 mod input;
 use reedline::Signal;
-use std::env;
-use std::process::Command;
+use std:: {
+    env, process::Command, path::PathBuf,
+    fs::File, io:: {BufRead, BufReader},
+};
 
 fn tokenize(input: &str) -> Option<(Vec<&str>, &str)> {
     let mut parts = input.trim().split_whitespace();
-    let cmd = match parts.next() {
-        Some(c) => c,
-        None => return Option::None,
-    };
+    let cmd = parts.next()?;
     let args: Vec<&str> = parts.collect();
-    Option::Some((args, cmd))
+    Some((args, cmd))
 }
 
-struct Execute;
+struct Shell;
 
-impl Execute {
+impl Shell {
     fn run(cmd: &str, args: &[&str]) {
         match cmd {
             "cd" => Self::cd(args),
@@ -28,19 +27,19 @@ impl Execute {
     }
 
     fn cd(args: &[&str]) {
-       let mut target = if args.is_empty() {
-           env::var("HOME").unwrap_or(String::from("/"))
-       } else {
-           args[0].to_string()
-       };
-       if target.starts_with("~") {
-           if let Ok(home) = env::var("HOME") {
-               target = target.replacen('~',&home,1)
-           };
-       };
-       if let Err(e) = env::set_current_dir(&target) {
-           eprintln!("afsh: {}", e)
-       }
+        let target = match args.first() {
+            None | Some(&"~") => dirs::home_dir().unwrap_or_else(|| PathBuf::from("/")),
+            Some(&path) if path.starts_with("~/") => {
+                let mut p = dirs::home_dir().unwrap_or_else(|| PathBuf::from("/"));
+                p.push(&path[2..]);
+                p
+            },
+            Some(&path) => PathBuf::from(path), 
+        }; 
+
+        if let Err(e) = env::set_current_dir(&target) {
+            eprintln!("afsh: failed to change directory: {e}");
+        }
     }
 
     fn dc() {
@@ -64,14 +63,17 @@ impl Execute {
     fn history() {
         let hist_path = dirs::home_dir().unwrap_or(std::path::PathBuf::from("/"))
             .join(".afsh_history");
-        match std::fs::read_to_string(&hist_path) {
-            Ok(a) => {
-                for (i,l) in a.lines().enumerate() {
-                    println!("{:>4} {}", i+1, l);
+        match File::open(&hist_path) {
+            Ok(file) => {
+                let reader = BufReader::new(file);
+                for (i, line) in reader.lines().enumerate() {
+                    if let Ok(l) = line {
+                        println!("{:>4}    {}", i+1, l);
+                    }
                 }
-            },
-            Err(e) => { println!("afsh {}", e); },
-        }
+            }
+            Err(e) => eprintln!("afsh: failed to load history: {}", e)
+        }        
     }
 
     fn external(cmd: &str, args: &[&str]) {
@@ -80,10 +82,10 @@ impl Execute {
                 if !status.success() {
                     eprintln!("afsh: {}", status);
                 }
-            }
+            },
             Err(e) => {
                 eprintln!("afsh: {}", e);
-            }
+            },
         }
     }
 }
@@ -96,19 +98,20 @@ fn main() {
         let sig = rl.read_line(&prompt);
         match sig {
             Ok(Signal::Success(buffer)) => {
-                if &buffer == "q" { break; }
-                let (args, cmd) = match tokenize(&buffer){
-                    Option::Some((a, c)) => (a, c),
-                    Option::None => continue,
-                };
-                Execute::run(cmd,&args);
+                let buffer = buffer.trim();
+                if buffer == "q" || buffer == "exit" {
+                    break;
+                }
+                if let Some((args, cmd)) = tokenize(buffer) {
+                    Shell::run(cmd, &args);
+                }
                 if let Err(e) = rl.history_mut().sync() {
-                    eprintln!("afsh: {}", e);
+                    eprintln!("afsh: failed syncing history {}", e);
                 };
             },
             Ok(Signal::CtrlC) => continue,
             Ok(Signal::CtrlD) => break,
-            Ok(_) => todo!(),
+            Ok(_) => {},
             Err(e) => {
                 println!("afsh: {}", e);
                 break;
