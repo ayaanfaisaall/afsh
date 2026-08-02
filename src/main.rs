@@ -76,7 +76,11 @@ impl Shell {
         }        
     }
 
-    fn external(cmd: &str, args: &[&str]) {
+    fn external(mut cmd: &str, mut args: &[&str]) {
+        if cmd == "ls" {
+            cmd = "ls";
+            args = &["--color=auto"];
+        }
         match Command::new(cmd).args(args).status() {
             Ok(status) => {
                 if !status.success() {
