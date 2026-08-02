@@ -36,7 +36,7 @@ impl AfshCompleter {
     }
 
     fn complete_path(&self, word: &str, word_start: usize, pos: usize) -> Vec<Suggestion> {
-        let path = if word.starts_with("~") {
+        let path = if word.starts_with("~/") {
             if let Ok(home) = env::var("HOME") {
                 word.replacen('~', &home, 1)
             } else {
