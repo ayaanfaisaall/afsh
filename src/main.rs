@@ -68,7 +68,7 @@ impl Shell {
                 let reader = BufReader::new(file);
                 for (i, line) in reader.lines().enumerate() {
                     if let Ok(l) = line {
-                        println!("{:>4}    {}", i+1, l);
+                        println!("{:>4} {:>4}", i+1, l);
                     }
                 }
             }
@@ -76,11 +76,7 @@ impl Shell {
         }        
     }
 
-    fn external(mut cmd: &str, mut args: &[&str]) {
-        if cmd == "ls" {
-            cmd = "ls";
-            args = &["--color=auto"];
-        }
+    fn external(cmd: &str, args: &[&str]) {
         match Command::new(cmd).args(args).status() {
             Ok(status) => {
                 if !status.success() {
