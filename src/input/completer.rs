@@ -99,7 +99,7 @@ impl Completer for AfshCompleter {
         let word_to_complete = &line_upto_pfx[word_start..];
         let mut suggestions = Vec::new();
 
-        if word_start == 0 && !word_to_complete.contains('/') {
+        if !word_to_complete.contains('/') {
             self.load_binaries();
 
             if let Some(bins) = &self.binaries {
