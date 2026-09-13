@@ -19,12 +19,10 @@ impl AfshCompleter {
             for path in env::split_paths(&paths) {
                 if let Ok(entries) = fs::read_dir(&path) {
                     for entry in entries.flatten() {
-                        if let Ok(file_type) = entry.file_type() {
-                            if file_type.is_file() || file_type.is_symlink() {
-                                if let Ok(name) = entry.file_name().into_string() {
+                        if let Ok(file_type) = entry.file_type() 
+                            && (file_type.is_file() || file_type.is_symlink()) 
+                                && let Ok(name) = entry.file_name().into_string() {
                                     binaries.push(name);
-                                }
-                            }
                         }
                     }
                 }

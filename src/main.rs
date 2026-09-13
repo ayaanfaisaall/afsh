@@ -1,6 +1,8 @@
 mod input;
-use lexaf::Lexer;
-use parsaf::Parser;
+use parsaf::{
+    Parser,
+    Lexer
+};
 use reedline::Signal;
 // use std:: {
 //     env, process::Command, path::PathBuf,
@@ -105,7 +107,7 @@ fn main() {
                 if buffer == "q" || buffer == "exit" {
                     break;
                 }
-                let tokens = Lexer::new(&buffer).tokenize(); {
+                let tokens = Lexer::new(buffer).tokenize(); {
                     println!("{:?}", tokens);
                 }
                 let ast = Parser::new(&tokens).parse(); {

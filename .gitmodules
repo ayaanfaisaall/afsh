@@ -1,0 +1,6 @@
+[submodule "parsaf"]
+	path = parsaf
+	url = git@github:ayaanfaisaall/parsaf.git
+[submodule "lexaf"]
+	path = lexaf
+	url = git@github:ayaanfaisaall/lexaf.git
