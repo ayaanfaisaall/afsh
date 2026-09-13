@@ -1,6 +1,6 @@
 [submodule "parsaf"]
 	path = parsaf
-	url = git@github:ayaanfaisaall/parsaf.git
+	url = https://github.com/ayaanfaisaall/parsaf.git
 [submodule "lexaf"]
 	path = lexaf
-	url = git@github:ayaanfaisaall/lexaf.git
+	url = https://github.com/ayaanfaisaall/lexaf.git
