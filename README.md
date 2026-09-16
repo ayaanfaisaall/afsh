@@ -45,11 +45,11 @@ af-lang consists of 5 datatypes:
 ### Keywords
 Every statement inside af-lang returns an exitcode (i-e, 0, 1).
 
-* **let:** let statement accepts any datatype to store in any variable, *(Note: A simple word without "quotes" will be resolved as a variable.)*
+* **let:** let statement accepts any datatype to store in any variable, *(Note: A single word without "quotes" will be resolved as a variable.)*
+* **print:** print statement allows all the datatypes like let, it also resolve single word as a variable.
 * **if:** if statement in af-lang can have any command or any statement as its condition, it runs whenever a command returns a successful exitcode (i-e, 0).
 * **while:** while statement also allows any statement or command inside its condition, and runs similar to if.
 * **for:** for allows a loop for a given iterator over a given range.
-* **print:** print statement allows all the datatypes like let, it also resolve single word as a variable. 
 
 ### Example Syntax
 
