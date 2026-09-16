@@ -80,11 +80,11 @@ af-lang allows any statement inside if condition which means we can run this:
 if let a = {cat ~/any/file} {
     print a
 } else {
-    print "error: {a}"
+    print "error: cat failed: file may not be present"
 }
 ```
 
-*Note: the scope of variable assignment is limited to if statement only, also when let fails, interaf will assign the exact error (i-e, file not found), inside variable "a" and the exitcode of let will be set to 1, which will fail the if statement and hence the else will run and print the exact error, without stopping the whole program.*
+*Note: the scope of variable assignment is limited to if statement only, also when let fails, exitcode of let will be set to 1, which will fail the if statement and hence the else will run and print the error, without stopping the whole program.*
 
 ## License
 
