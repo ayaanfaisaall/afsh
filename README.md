@@ -1,6 +1,6 @@
 # afsh - A Custom Shell and Scripting Language
 
-`afsh` is a custom shell environment and scripting language built in Rust. It merges standard shell paradigms—such as pipelines, background execution, and redirections—with modern programming constructs like arrays, strict scoping, string interpolation, and logical control flow.
+`afsh` is a custom shell environment and scripting language built in Rust. It merges standard shell paradigms, such as pipelines, background execution, and redirections, with modern programming constructs like arrays, strict scoping, string interpolation, and logical control flow.
 
 ## Architecture
 
@@ -39,13 +39,13 @@ af-lang consists of 5 datatypes:
 * **Strings:** af-lang consists of interpolated strings which can resolve a variable inside them.
 * **Numbers:** The maximum limit for the numbers which can be stored is 64 bits.
 * **Decimals:** The maximum limit for the decimal (or float) is also 64 bits.
-* **Bool:** af-lang also support bool (true or false), *Note: 1 is not true neither 0 is false in af-lang.*
+* **Bool:** af-lang also support bool (true or false), *(Note: 1 is not true neither 0 is false in af-lang.)*
 * **Arrays:** The arrays in af-lang are a heterogenous dataset, you can add all of the datatypes inside arrays, (even arrays themselves).
 
 ### Keywords
 Every statement inside af-lang returns an exitcode (i-e, 0, 1).
 
-* **let:** let statement accepts any datatype to store in any variable, *Note: A simple word without "quotes" will be resolved as a variable.*
+* **let:** let statement accepts any datatype to store in any variable, *(Note: A simple word without "quotes" will be resolved as a variable.)*
 * **if:** if statement in af-lang can have any command or any statement as its condition, it runs whenever a command returns a successful exitcode (i-e, 0).
 * **while:** while statement also allows any statement or command inside its condition, and runs similar to if.
 * **for:** for allows a loop for a given iterator over a given range.
@@ -84,7 +84,7 @@ if let a = {cat ~/any/file} {
 }
 ```
 
-*Note: the scope of variable assignment is limited to if statement only, also when let fails, interaf will assign the exact error (i-e, file not found), inside variable "a" and the exitcode of let will be set to 1, which will fail the if statement and hence the else will run and print the exact error, without stopping the whole program*
+*Note: the scope of variable assignment is limited to if statement only, also when let fails, interaf will assign the exact error (i-e, file not found), inside variable "a" and the exitcode of let will be set to 1, which will fail the if statement and hence the else will run and print the exact error, without stopping the whole program.*
 
 ## License
 
