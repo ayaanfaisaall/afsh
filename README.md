@@ -6,8 +6,8 @@
 
 The `afsh` pipeline is built on top of modular, specialized crates:
 
-* **[lexaf](https://crates.io/crates/lexaf):** The lexical analyzer and tokenizer. It acts as the "dumbest but fastest" step in the pipeline, reading raw text and categorizing it into structured tokens (words, keywords, strings, punctuation, and operators) while maintaining `Span` tracking.
-* **[parsaf](https://crates.io/crates/parsaf):** The recursive descent parser and Abstract Syntax Tree (AST) generator. It consumes the flat sequence of tokens from `lexaf` and structures them into a logical, nested AST made up of `Stmt` nodes. It natively handles operator precedence, pipelines, control flow blocks, and strictly differentiates between raw shell commands and language base types.
+* **[lexaf](https://crates.io/crates/lexaf):** The lexical analyzer and zero-copy tokenizer. It acts as the "dumbest but fastest" step in the pipeline, reading raw text and categorizing it into structured tokens (words, keywords, strings, punctuation, and operators) while maintaining `Span` tracking.
+* **[parsaf](https://crates.io/crates/parsaf):** The recursive descent zero-copy parser and Abstract Syntax Tree (AST) generator. It consumes the flat sequence of tokens from `lexaf` and structures them into a logical, nested AST made up of `Stmt` nodes. It natively handles operator precedence, pipelines, control flow blocks, and strictly differentiates between raw shell commands and language base types.
 * **interaf (In Development):** The interpreter. This component is currently in active development and will be integrated into the pipeline as soon as it is ready to execute the parsed AST.
 
 *Note: Currently, running `afsh` will read your input, tokenize it, parse it, and output the generated AST (or visually display any syntax errors) to demonstrate the parsing capabilities while the interpreter is being finalized.*
