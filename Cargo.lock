@@ -472,9 +472,9 @@ dependencies = [
 
 [[package]]
 name = "lexaf"
-version = "0.1.6"
+version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "63ca6426c8a1f0002f3a966b213c4d7b39681f5b02eb2b2232f622f5d2fa1ead"
+checksum = "42ab66f36dc753e54e52f243a56f881194ea2a0ba03855aafbc662d95b09b55d"
 dependencies = [
  "miette",
  "thiserror 1.0.69",
@@ -682,7 +682,7 @@ dependencies = [
 
 [[package]]
 name = "parsaf"
-version = "0.1.8"
+version = "0.1.11"
 dependencies = [
  "lexaf",
  "miette",
