@@ -29,11 +29,10 @@ impl Prompt for AfshPrompt {
         let time_str = Local::now().format("%H:%M").to_string();
 
         let formatted = format!(
-            "\x1b[38;2;50;130;224m┌─\x1b[48;5;236m\x1b[38;5;255m    {}  \
+            "\x1b[38;2;50;130;224m┌\x1b[48;5;236m\x1b[38;5;255m    {}  \
              \x1b[48;2;50;130;224m\x1b[38;5;236m\
-             \x1b[48;2;50;130;224m\x1b[38;5;232m  󰥔 {} \
-             \x1b[0m\x1b[38;2;50;130;224m\x1b[0m\n\
-             \x1b[38;2;50;130;224m│\x1b[0m\n", 
+             \x1b[48;2;50;130;224m\x1b[1;38;5;232m  󰥔 {} \
+             \x1b[0m\x1b[38;2;50;130;224m\x1b[0m\n",
             display_path, time_str
         );
 
