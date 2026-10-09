@@ -24,7 +24,6 @@ dependencies = [
  "chrono",
  "ctrlc",
  "dirs",
- "interaf",
  "parsaf",
  "reedline",
 ]
@@ -438,13 +437,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ae293c039020f9ec10710af98d29ce6aa2051486638b49c9a6409f3b4a9e98ad"
 
 [[package]]
-name = "interaf"
-version = "0.1.0"
-dependencies = [
- "parsaf",
-]
-
-[[package]]
 name = "is_ci"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -680,7 +672,7 @@ dependencies = [
 
 [[package]]
 name = "parsaf"
-version = "0.1.15"
+version = "0.1.16"
 dependencies = [
  "lexaf",
  "miette",
