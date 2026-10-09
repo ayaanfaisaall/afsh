@@ -44,7 +44,6 @@ fn get_git_branch() -> Option<String> {
 fn get_battery_info() -> Option<(u8, bool)> {
     let base = Path::new("/sys/class/power_supply");
     
-    // Most laptops use BAT0 or BAT1
     let bat_path = if base.join("BAT0").exists() {
         base.join("BAT0")
     } else if base.join("BAT1").exists() {
@@ -87,7 +86,7 @@ impl Prompt for AfshPrompt {
         let time_str = Local::now().format("%H:%M").to_string();
         let mut prompt = String::new();
 
-        prompt.push_str(&format!("\x1b[{}m╭", LIGHT_BLUE_FG));
+        prompt.push_str(&format!("\n\x1b[{}m╭", LIGHT_BLUE_FG));
 
         prompt.push_str(&format!(
             "\x1b[{}m\x1b[38;5;255m    {}  ",
@@ -126,13 +125,11 @@ impl Prompt for AfshPrompt {
             }
         }
 
-        // Triangle 2: Git -> Battery
         prompt.push_str(&format!(
             "\x1b[{}m\x1b[{}m",
             bat_bg, LIGHT_BLUE_FG
         ));
 
-        // 4. BATTERY SEGMENT (Always uses white text)
         if !bat_text.is_empty() {
             prompt.push_str(&format!(
                 "\x1b[{}m\x1b[38;5;255m{}",
@@ -140,31 +137,20 @@ impl Prompt for AfshPrompt {
             ));
         }
 
-        // Triangle 3: Battery -> Time (Darkest Blue)
         prompt.push_str(&format!(
             "\x1b[{}m\x1b[{}m",
             DARKEST_BLUE_BG, bat_fg
         ));
 
-        // 5. TIME SEGMENT (Now Darkest Blue, switched to white text for readability)
         prompt.push_str(&format!(
             "\x1b[{}m\x1b[38;5;255m  󰥔 {} ",
             DARKEST_BLUE_BG, time_str
         ));
 
-        // 6. END TRIANGLE (Darkest Blue)
         prompt.push_str(&format!(
             "\x1b[0m\x1b[{}m\x1b[0m\n",
             DARKEST_BLUE_FG
         ));
-
-        // let formatted = format!(
-        //     "\x1b[38;2;50;130;224m┌\x1b[48;5;236m\x1b[38;5;255m    {}  \
-        //      \x1b[48;2;50;130;224m\x1b[38;5;236m\
-        //      \x1b[48;2;50;130;224m\x1b[1;38;5;232m  󰥔 {} \
-        //      \x1b[0m\x1b[38;2;50;130;224m\x1b[0m\n",
-        //     display_path, time_str
-        // );
 
         Cow::Owned(prompt)
     }

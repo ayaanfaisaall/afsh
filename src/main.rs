@@ -1,4 +1,5 @@
 mod input;
+use interaf::Interpreter;
 use parsaf::{
     Report,
     Parser,
@@ -9,6 +10,7 @@ use reedline::Signal;
 fn main() {
     let mut rl = input::build_rl();
     let prompt = input::AfshPrompt;
+    let mut interpreter = Interpreter::new();
     ctrlc::set_handler(move || {}).expect("error: setting ctrlc");
 
     loop{
@@ -24,7 +26,7 @@ fn main() {
                     Ok(tokens) => {
                         let mut parser = Parser::new(&tokens);
                         match parser.parse() {
-                            Ok(ast) => println!("{:#?}", ast),
+                            Ok(ast) => interpreter.run(&ast),
                             Err(e) => {
                                 let error = Report::new(e).with_source_code(buffer.to_string());
                                 println!("{:?}", error);
