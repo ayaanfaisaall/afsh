@@ -87,7 +87,7 @@ impl Prompt for AfshPrompt {
         let time_str = Local::now().format("%H:%M").to_string();
         let mut prompt = String::new();
 
-        prompt.push_str(&format!("\x1b[{}m╭", LIGHT_BLUE_FG));
+        prompt.push_str(&format!("\n\x1b[{}m╭", LIGHT_BLUE_FG));
 
         prompt.push_str(&format!(
             "\x1b[{}m\x1b[38;5;255m    {}  ",

@@ -56,9 +56,9 @@ impl AfshCompleter {
             Some(idx) => word_start + idx + 1,
             None => word_start,
         };
-        
+
         let mut suggestions = Vec::new();
-        
+
         if let Ok(entries) = fs::read_dir(directory) {
             for entry in entries.filter_map(Result::ok) {
                 let file = entry.file_name().to_string_lossy().to_string();
@@ -95,9 +95,10 @@ impl Completer for AfshCompleter {
         let line_upto_pfx = &line[..pos];
         let word_start = line_upto_pfx.rfind(' ').map(|i| i + 1).unwrap_or(0);
         let word_to_complete = &line_upto_pfx[word_start..];
-        let mut suggestions = Vec::new();
+        let mut suggestions = self.complete_path(word_to_complete, word_start, pos);
 
-        if !word_to_complete.contains('/') {
+        // Only add binaries if no matching path was found.
+        if suggestions.is_empty() && !word_to_complete.contains('/') {
             self.load_binaries();
 
             if let Some(bins) = &self.binaries {
@@ -121,12 +122,9 @@ impl Completer for AfshCompleter {
             }
         }
 
-        let mut path_suggestions = self.complete_path(word_to_complete, word_start, pos);
-        suggestions.append(&mut path_suggestions);
-
         if suggestions.len() > 1 {
             let mut prefix = suggestions[0].value.clone();
-            
+
             for sug in &suggestions[1..] {
                 let cmn_bytes = prefix
                     .bytes()
