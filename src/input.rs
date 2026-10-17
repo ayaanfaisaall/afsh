@@ -5,6 +5,8 @@ use reedline::{
 use std:: { env, fs, borrow::Cow, path::{ Path, PathBuf } , process::Command };
 use chrono::Local;
 mod completer;
+mod validator;
+mod highlighter;
 
 pub struct AfshPrompt;
 
@@ -193,6 +195,8 @@ pub fn build_rl() -> Reedline {
 
     Reedline::create()
         .with_history(history)
+        .with_validator(Box::new(validator::AfshValidator))
+        .with_highlighter(Box::new(highlighter::AfshHighlighter))
         .with_edit_mode(edtmd)
         .with_completer(completer)
         .with_menu(ReedlineMenu::EngineCompleter(completion_menu))
