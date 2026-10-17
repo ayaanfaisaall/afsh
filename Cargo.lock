@@ -25,6 +25,7 @@ dependencies = [
  "ctrlc",
  "dirs",
  "interaf",
+ "nu-ansi-term",
  "parsaf",
  "reedline",
 ]
